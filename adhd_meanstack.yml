@@ -2,8 +2,8 @@
   tasks:
       - name: Install Git
         yum: pkg=git state=installed
-      - name: Git clone
-        command: 'git clone http://github.com/linnovate/mean.git /srv/mean'
+      - git: repo=http://github.com/linnovate/mean.git 
+             dest=/srv/mean
       - name: install meanstack
         command: "cd /srv/mean ; grunt"
         register: meanstack_install_output
