@@ -2,9 +2,19 @@
   tasks:
       - name: Install Git
         yum: pkg=git state=installed
-      - git: repo=http://github.com/linnovate/mean.git 
+      - name : Node.JS dependencies install
+        yum: pkg={{ item }} state=installed
+        with_items:
+                    - gcc
+                    - gcc-c++
+                    - autoconf
+                    - automake
+                    - make
+                    - curl
+                    - openssl-devel
+      - git: repo=https://github.com/linnovate/mean.git 
              dest=/srv/mean
       - name: install meanstack
-        command: "cd /srv/mean ; grunt"
+        command: chdir=/srv/mean grunt
         register: meanstack_install_output
       - debug: var=emanstack_install_output
