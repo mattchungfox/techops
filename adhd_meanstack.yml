@@ -1,0 +1,10 @@
+- hosts : adhdwebqa
+  tasks:
+      - name: Install Git
+        yum: pkg=git state=installed
+      - name: Git clone
+        command: 'git clone http://github.com/linnovate/mean.git /srv/mean'
+      - name: install meanstack
+        command: "cd /srv/mean ; grunt"
+        register: meanstack_install_output
+      - debug: var=emanstack_install_output

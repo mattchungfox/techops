@@ -1,0 +1,14 @@
+- hosts: webservers
+  tasks:
+  - name: install apache
+    yum: pkg=httpd state=installed
+  - name: print apache version
+    shell: yum info httpd | grep Version
+    register: httpd_version
+  - debug: var=httpd_version.stdout_lines
+  - name: mysql
+    yum: pkg=mysql-server state=installed
+  - name: install php
+    yum: pkg=php state=installed
+  - name: install php mysql
+    yum: pkg=php-mysql state=installed
