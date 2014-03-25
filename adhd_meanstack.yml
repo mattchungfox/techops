@@ -12,6 +12,16 @@
                     - make
                     - curl
                     - openssl-devel
+      - name: Download node.js
+        command: chdir=/tmp/ wget http://nodejs.org/dist/v0.10.26/node-v0.10.26.tar.gz
+      - name: Extract Node.js
+        command: chdir=/tmp tar xvf node-v0.10.26.tar.gz
+      - name: Compile Node.js
+        command: chdir=/tmp/node-v0.10.26 {{item}}
+        with_items:
+                    - ./configure
+                    - make
+                    - make install
       - git: repo=https://github.com/linnovate/mean.git 
              dest=/srv/mean
       - name: install meanstack
