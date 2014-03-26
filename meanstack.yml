@@ -1,0 +1,38 @@
+- hosts : "{{ target }}"
+  tasks:
+      - name: Install Git
+        yum: pkg=git state=installed
+      - name: Create yum.d directory
+        file: path=/etc/yum.repos.d/ state=directory
+      - name: Copy Mongo Repo over
+        copy: src={{ mongodb_repofile }} dest=/etc/yum.repos.d/mongodb.repo 
+      - name : Node.JS dependencies install
+        yum: pkg={{ item }} state=installed
+        with_items:
+                    - gcc
+                    - gcc-c++
+                    - autoconf
+                    - automake
+                    - make
+                    - curl
+                    - openssl-devel
+                    - mongo-10gen 
+                    - mongo-10gen-server
+      - service: name=mongod state=started
+      - name: Download node.js
+        command: chdir=/tmp/ wget http://nodejs.org/dist/v0.10.26/node-v0.10.26.tar.gz creates=/usr/local/bin/node
+      - name: Extract Node.js
+        command: chdir=/tmp tar xvf node-v0.10.26.tar.gz creates=/usr/local/bin/node
+      - name: Compile Node.js
+        command: chdir=/tmp/node-v0.10.26 {{item}} creates=/usr/local/bin/node
+        with_items:
+                    - ./configure
+                    - make
+                    - make install
+      - npm: name=grunt global=yes
+      - npm: name=grunt-cli global=yes
+      - git: repo=https://github.com/linnovate/mean.git 
+             dest=/srv/mean
+      - name: Install NPM dependencies
+        command: chdir=/srv/mean npm install
+
